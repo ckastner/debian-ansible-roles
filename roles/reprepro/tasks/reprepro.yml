@@ -1,0 +1,94 @@
+---
+- name: reprepro => Ensure that all necessary variables are set
+  assert:
+    quiet: true
+    that:
+      - reprepro_servername != "CHANGME"
+      - reprepro_deriv != "CHANGME"
+      - reprepro_origin != "CHANGME"
+      - reprepro_label != "CHANGME"
+      - reprepro_distributions | length > 0
+
+- name: reprepro => Package is installed
+  apt:
+    name: reprepro
+    state: present
+
+- name: reprepro => Group 'reprepro' exists
+  group:
+    name: reprepro
+    system: true
+    state: present
+
+- name: reprepro => user 'reprepro' exists
+  user:
+    name: reprepro
+    system: true
+    group: reprepro
+    home: /var/lib/reprepro
+    shell: /bin/bash
+    create_home: false
+    # For hardware tokens where udev 'uaccess' doesn't seem to work. In those
+    # cases, creating a udev rule and giving 'plugdev' group ownership seems to
+    # work.
+    groups: plugdev
+
+- name: reprepro => Create all general directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner | default('reprepro') }}"
+    group: "{{ item.group | default('reprepro') }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - {mode:  "0755", path: /etc/reprepro}
+    - {mode:  "0755", path: /var/lib/reprepro}
+    - {mode: "02750", path: /var/log/reprepro, group: adm}
+      # /srv/reprepro must be owned by root and must not have group- or
+      # other-writable bits set for OpenSSH's ChrootDirectory to work
+    - {mode:  "0755", path: /srv/reprepro, owner: root}
+    - {mode: "03775", path: /srv/reprepro/incoming, group: reprepro-sftp}
+    - {mode:  "0755", path: /srv/reprepro/www}
+    - {mode:  "0755", path: /srv/reprepro/www/debian}
+    - {mode:  "0755", path: /srv/reprepro/www/debian/dists}
+    - {mode:  "0755", path: /srv/reprepro/www/debian/pool}
+
+- name: reprepro => Distribution directories by codename
+  file:
+    path: /srv/reprepro/www/debian/dists/{{ item.codename }}
+    state: directory
+    owner: reprepro
+    group: reprepro
+    mode: "0755"
+  loop: "{{ reprepro_distributions }}"
+
+- name: reprepro => Link suites to codenames
+  when: item.suite != item.codename
+  file:
+    src: /srv/reprepro/www/debian/dists/{{ item.codename }}
+    dest: /srv/reprepro/www/debian/dists/{{ item.suite }}
+    state: link
+    owner: reprepro
+    group: reprepro
+  loop: "{{ reprepro_distributions }}"
+
+- name: reprepro => Update config in /etc/reprepro
+  template:
+    src: reprepro/{{ item }}.j2
+    dest: /etc/reprepro/{{ item }}
+    owner: reprepro
+    group: reprepro
+    mode: "0644"
+  loop:
+    - distributions
+    - incoming
+    - options
+    - uploaders
+
+- name: reprepro => Link ./conf to /etc/reprepro
+  file:
+    src: /etc/reprepro
+    dest: /var/lib/reprepro/conf
+    state: link
+    owner: reprepro
+    group: reprepro

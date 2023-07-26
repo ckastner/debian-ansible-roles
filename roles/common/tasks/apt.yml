@@ -1,0 +1,39 @@
+---
+- name: APT => Read system codename
+  shell: . /etc/os-release && echo $VERSION_CODENAME
+  register: version_codename
+  changed_when: false
+
+- name: APT => Ensure apt_codename is set
+  when: apt_codename | length == 0
+  set_fact:
+    apt_codename: "{{ version_codename.stdout }}"
+  changed_when: false
+
+- name: APT => Generate /etc/apt/sources.list.d/ansible-managed.list
+  template:
+    src: apt/sources.list.j2
+    dest: /etc/apt/sources.list.d/ansible-managed.list
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Update APT cache
+
+- name: APT => Empty /etc/apt/sources.list
+  when: apt_sourceslist_empty
+  copy:
+    content: ""
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Update APT cache
+
+- name: APT => Generate /etc/apt/preferences.d/ansible-managed.pref
+  template:
+    src: apt/preferences.j2
+    dest: /etc/apt/preferences.d/ansible-managed.pref
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Update APT cache

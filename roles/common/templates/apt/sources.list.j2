@@ -1,0 +1,49 @@
+{% for atype in apt_type %}
+{{ "%-07s" % atype }} {{ apt_uri}} {{ apt_codename }} {{ apt_components }}
+{% endfor %}
+
+{%- if apt_security_enable %}
+{%- if apt_codename not in ('unstable', 'sid', 'experimental') %}
+
+{% for atype in apt_type %}
+{{ "%-07s" % atype }} https://security.debian.org/debian-security {{ apt_codename }}-security {{ apt_components }}
+{% endfor %}
+{% else %}
+
+{% for atype in apt_type %}
+{{ "%-07s" % atype }} https://security.debian.org/debian-security testing-security {{ apt_components }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+{%- if apt_updates_enable and apt_codename not in ('unstable', 'sid', 'experimental') %}
+
+# See https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
+{% for atype in apt_type %}
+{{ "%-07s" % atype}} {{ apt_uri }} {{ apt_codename }}-updates {{ apt_components }}
+{% endfor %}
+{% endif %}
+
+{%- if apt_backports_enable and apt_codename not in ('unstable', 'sid', 'experimental') %}
+
+# See https://www.debian.org/doc/manuals/debian-reference/ch02.en.html#_updates_and_backports
+{% for atype in apt_type %}
+{{ "%-07s" % atype}} {{ apt_uri }} {{ apt_codename }}-backports {{ apt_components }}
+{% endfor %}
+{% endif %}
+
+{%- for src in apt_additional_sources %}
+
+{% if src.comment is defined %}
+# {{ src.comment }}
+{% endif %}
+{% if src.signed_by is defined -%}
+{% for atype in apt_type %}
+{{ "%-07s" % atype}} [signed-by={{ src.signed_by }}] {{ src.uri }} {{ src.codename }} {{ src.components | default('main') }}
+{% endfor %}
+{% else -%}
+{% for atype in apt_type %}
+{{ "%-07s" % atype}} {{ src.uri }} {{ src.codename }} {{ src.components | default('main') }}
+{% endfor %}
+{% endif %}
+{% endfor %}

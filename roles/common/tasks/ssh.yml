@@ -1,0 +1,23 @@
+---
+- name: OpenSSH server => Package is installed
+  apt:
+    name: openssh-server
+    state: present
+
+- name: OpenSSH server => Enable/disable password authentication
+  template:
+    src: ssh/sshd_config.d/password-auth.conf
+    dest: /etc/ssh/sshd_config.d/password-auth.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart OpenSSH server
+
+- name: OpenSSH server => Enable/disable legacy ssh-rsa support
+  template:
+    src: ssh/sshd_config.d/ssh-rsa.conf
+    dest: /etc/ssh/sshd_config.d/ssh-rsa.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart OpenSSH server

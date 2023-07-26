@@ -1,0 +1,12 @@
+---
+- name: kernel => /etc/udev/rules.d
+  when:
+    - etc_udev_rules_d | length > 0
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/udev/rules.d/{{ item }}
+    dest: /etc/udev/rules.d/{{ item }}
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ etc_udev_rules_d }}"
+  notify: Update initramfs

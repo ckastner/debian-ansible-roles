@@ -1,0 +1,19 @@
+---
+- name: sysfsutils => Package is installed
+  when:
+    - etc_sysfs_d | length > 0
+  apt:
+    name: sysfsutils
+    state: present
+
+- name: sysfsutils => /etc/sysfs.d
+  when:
+    - etc_sysfs_d | length > 0
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/sysfs.d/{{ item }}
+    dest: /etc/sysfs.d/{{ item }}
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ etc_sysfs_d }}"
+  notify: Update initramfs

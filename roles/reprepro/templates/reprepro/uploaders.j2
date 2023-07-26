@@ -1,0 +1,6 @@
+# When using "by key <key-id>", note that <key-id> must be in reprepo's own
+# keyring in ~/.gnupg, otherwise an upload cannot be verified and will be
+# rejected.
+{% for uploader in reprepro_uploaders %}
+allow * by {{ uploader }}
+{% endfor %}

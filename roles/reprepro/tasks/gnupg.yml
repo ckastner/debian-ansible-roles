@@ -1,0 +1,52 @@
+# See main.yml. This is only executed when 'reprepro_signwith' is set
+---
+- name: reprepro => Create GnuPG directory
+  file:
+    path: /var/lib/reprepro/.gnupg
+    state: directory
+    owner: reprepro
+    group: reprepro
+    mode: "0700"
+
+- name: reprepro => GnuPG non-private files
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/reprepro/gnupg/{{ item }}
+    dest: /var/lib/reprepro/.gnupg/{{ item }}
+    owner: reprepro
+    group: reprepro
+    mode: "0600"
+  loop:
+    - gpg.conf
+    - pubring.kbx
+    - trustdb.gpg
+
+- name: reprepro => GnuPG private files
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/reprepro/gnupg/private-keys-v1.d/
+    dest: /var/lib/reprepro/.gnupg/private-keys-v1.d
+    owner: reprepro
+    group: reprepro
+    mode: "0600"
+
+- name: reprepro => Copy GnuPG signing script
+  when: reprepro_signwith | trim == "!"
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/reprepro/sign-release.sh
+    dest: /usr/local/bin/sign-release.sh
+    owner: reprepro
+    group: reprepro
+    mode: "0755"
+
+# See https://wiki.debian.org/DebianRepository/UseThirdParty
+#
+# TODO: Actually, we already copied the keyring, so we could run a command and
+# export remotely. This is not as easy as it sounds, however. Whenever the
+# keyring gets updated, we'd need to trigger this again
+- name: reprepro => Place GnuPG public key in archive root
+  when: reprepro_deriv | length > 0
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/reprepro/archive-keyring.gpg
+    dest: /srv/reprepro/www/debian/{{ reprepro_deriv }}-archive-keyring.gpg
+    owner: reprepro
+    group: reprepro
+    mode: "0644"

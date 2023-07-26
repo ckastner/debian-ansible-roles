@@ -1,0 +1,24 @@
+# See ../README.md
+
+apt_sourceslist_empty: true
+apt_uri: https://deb.debian.org/debian
+apt_codename: ""
+apt_components: main
+apt_type: [deb, deb-src]
+apt_security_enable: true
+apt_updates_enable: true
+apt_backports_enable: false
+apt_additional_sources: []
+apt_pin: []
+
+sshd_legacy_sshrsa: false
+sshd_password_auth: false
+
+etc_modules: []
+etc_modprobe_d: []
+
+etc_sysfs_d: []
+
+etc_udev_rules_d: []
+
+systemd_watchdog_sec: 0

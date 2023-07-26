@@ -1,0 +1,42 @@
+---
+- name: APT configuration
+  import_tasks: apt.yml
+  tags:
+    - apt
+
+- name: firewalld configuration tasks
+  import_tasks: firewalld.yml
+  tags:
+    - firewalld
+
+- name: Kernel module configuration tasks
+  import_tasks: modules.yml
+  tags:
+    - kernel
+    - modules
+    - drivers
+
+- name: OpenSSH configuration
+  import_tasks: ssh.yml
+  tags:
+    - ssh
+
+- name: sysfs configuration tasks
+  import_tasks: sysfsutils.yml
+  tags:
+    - sysfs
+    - sysfsutils
+    - drivers
+
+- name: systemd configuration tasks
+  import_tasks: systemd.yml
+  tags:
+    - systemd
+
+- name: udev configuration tasks
+  import_tasks: udev.yml
+  tags:
+    - kernel
+    - modules
+    - drivers
+    - udev

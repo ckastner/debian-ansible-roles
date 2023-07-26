@@ -1,0 +1,34 @@
+---
+- name: systemd-timesyncd => Package is installed
+  apt:
+    name: systemd-timesyncd
+    state: present
+
+- name: systemd => Create /var/log/journal
+  file:
+    path: /var/log/journal
+    state: directory
+    owner: root
+    group: systemd-journal
+    mode: "02755"
+  register: var_log_journal
+
+- name: systemd => Set permissions on /var/log/journal
+  when: var_log_journal.changed
+  shell: systemd-tmpfiles --create --prefix /var/log/journal
+
+- name: systemd => Ensure /etc/system.d/system.conf.d is present
+  file:
+    path: /etc/systemd/system.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: systemd => Enable watchdog
+  template:
+    src: systemd/system.conf.d/watchdog.conf
+    dest: /etc/systemd/system.conf.d/watchdog.conf
+    owner: root
+    group: root
+    mode: "0644"

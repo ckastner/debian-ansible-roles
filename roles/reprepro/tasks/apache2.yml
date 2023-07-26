@@ -1,0 +1,30 @@
+---
+- name: reprepro => Enable required Apache modules
+  command: a2enmod {{ item }}
+  args:
+    creates: /etc/apache2/mods-enabled/{{ item }}.load
+  loop:
+    - ssl
+  notify: Restart Apache webserver
+
+- name: reprepro => Apache configuration file
+  template:
+    src: apache2/sites-available/reprepro.conf.j2
+    dest: /etc/apache2/sites-available/reprepro.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: reprepro => Enable Apache site
+  command: a2ensite reprepro
+  args:
+    creates: /etc/apache2/sites-enabled/reprepro.conf
+  notify: Restart Apache webserver
+
+- name: reprepro => Copy index.html
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/reprepro/index.html
+    dest: /srv/reprepro/www
+    owner: reprepro
+    group: reprepro
+    mode: "0644"

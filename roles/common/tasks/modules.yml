@@ -1,0 +1,24 @@
+---
+- name: kernel => Add modules to /etc/modules
+  when:
+    - etc_modules | length > 0
+  lineinfile:
+    path: /etc/modules
+    line: "{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ etc_modules }}"
+  notify: Update initramfs
+
+- name: kernel => Copy files to /etc/modprobe.d
+  when:
+    - etc_modprobe_d | length > 0
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/modprobe.d/{{ item }}
+    dest: /etc/modprobe.d/{{ item }}
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ etc_modprobe_d }}"
+  notify: Update initramfs

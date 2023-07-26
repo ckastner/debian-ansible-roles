@@ -1,0 +1,32 @@
+---
+- name: reprepro => Group 'reprepro-sftp' exists
+  group:
+    name: reprepro-sftp
+    state: present
+
+- name: reprepro => Group 'reprepro-sftp' is populated
+  user:
+    name: "{{ item }}"
+    group: reprepro-sftp
+    shell: /usr/sbin/nologin
+    create_home: true
+  loop: "{{ reprepro_sftp_users }}"
+
+- name: reprepro => Members of 'reprepro-sftp' have an .ssh/authorized_keys
+  copy:
+    src: USERS/{{ item }}/ssh/
+    dest: /home/{{ item }}/.ssh
+    owner: "{{ item }}"
+    group: reprepro-sftp
+    mode: "0400"
+    directory_mode: "0500"
+  loop: "{{ reprepro_sftp_users }}"
+
+- name: reprepro => SSH server restricts group 'reprepro-sftp' group to locked-down sftp
+  copy:
+    src: ssh/sshd_config.d/reprepro-sftp.conf
+    dest: /etc/ssh/sshd_config.d/reprepro-sftp.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart OpenSSH server

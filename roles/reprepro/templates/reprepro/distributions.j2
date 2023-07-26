@@ -1,0 +1,21 @@
+{% for dist in reprepro_distributions %}
+Origin: {{ dist.origin | default(reprepro_origin) }}
+Label: {{ dist.label | default(reprepro_label) }}
+Suite: {{ dist.suite }}
+Codename: {{ dist.codename }}
+Description: {{ dist.description | default(reprepro_description) }}
+Components: {{ reprepro_components | join(' ') }}
+{% if reprepro_udebcomponents | length > 0 %}
+UDebComponents: {{ reprepro_udebcomponents | join(' ') }}
+{% endif %}
+{% if dist.version is defined %}
+Version: {{ dist.version }}
+{% endif %}
+Architectures: {{ reprepro_architectures | join(' ') }}
+{% if reprepro_signwith | length > 0 %}
+SignWith: {{ reprepro_signwith if reprepro_signwith | trim != "!" else "!  /usr/local/bin/sign-release.sh" }}
+{% endif %}
+Uploaders: uploaders
+Log: /var/log/reprepro/{{ dist.suite }}.log
+
+{% endfor %}

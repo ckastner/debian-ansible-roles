@@ -1,0 +1,6 @@
+# See ../README.md
+
+apache2_firewalld_zone: ""
+
+acme_domains: []
+acme_contact_email: ""

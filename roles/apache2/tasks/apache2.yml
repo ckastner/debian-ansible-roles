@@ -1,0 +1,11 @@
+---
+- name: Apache => Ensure packages are installed
+  apt:
+    name: apache2
+    state: present
+    install_recommends: false
+
+- name: Apache => Disable default site
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent

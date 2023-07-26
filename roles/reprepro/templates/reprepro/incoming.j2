@@ -1,0 +1,13 @@
+{% for dist in reprepro_distributions %}
+Name: {{ dist.codename }}
+IncomingDir: /srv/reprepro/incoming
+TempDir: temp/{{ dist.codename }}
+LogDir: log/{{ dist.codename }}
+Allow:{% if dist.additional is defined -%}
+{% for additional in dist.additional -%}
+{{ " " + additional + ">" + dist.codename }}
+{%- endfor -%} 
+{%- endif -%}
+{{ " " + dist.suite + ">" + dist.codename if dist.suite != dist.codename else "" }} {{ dist.codename }}
+
+{% endfor %}

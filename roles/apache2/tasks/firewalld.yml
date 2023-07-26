@@ -1,0 +1,13 @@
+---
+- name: firewalld => Open up HTTP/HTTPS ports on public endpoints
+  firewalld:
+    zone: "{{ apache2_firewalld_zone | default(omit, true) }}"
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    # Do this instead of notifying a handler, as the next play (dehydrated)
+    # needs port 80 to be open right away
+    immediate: true
+  loop:
+    - http
+    - https

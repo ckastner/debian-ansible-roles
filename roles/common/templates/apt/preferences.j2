@@ -1,0 +1,6 @@
+{% for entry in apt_pin -%}
+Package: {{ entry.package }}
+Pin: {{ entry.pin }}
+Pin-Priority: {{ entry.priority }}
+
+{% endfor %}

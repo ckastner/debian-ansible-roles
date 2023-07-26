@@ -1,0 +1,26 @@
+---
+- name: reprepro OpenSSH configuration
+  import_tasks: ssh.yml
+  tags:
+    - reprepro
+    - ssh
+
+- name: reprepro configuration
+  import_tasks: reprepro.yml
+  tags:
+    - reprepro
+
+- name: reprepro GnuPG configuration
+  when: reprepro_signwith | length > 0
+  import_tasks: gnupg.yml
+  tags:
+    - reprepro
+    - gnupg
+
+- name: reprepro Apache webserver configuration
+  import_tasks: apache2.yml
+  tags:
+    - reprepro
+    - apache2
+    - www
+    - webserver

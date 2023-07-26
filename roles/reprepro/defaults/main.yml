@@ -1,0 +1,19 @@
+# See ../README.md
+reprepro_servername: "CHANGEME"
+reprepro_origin: "CHANGEME"
+reprepro_label: "CHANGEME"
+reprepro_description: "CHANGEME"
+reprepro_architectures:
+  - source
+  - amd64
+reprepro_components:
+  - main
+reprepro_udebcomponents: []
+reprepro_distributions: []
+
+reprepro_uploaders: []
+
+reprepro_signwith: ""
+reprepro_deriv: ""
+
+reprepro_sftp_users: []

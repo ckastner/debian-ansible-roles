@@ -1,0 +1,9 @@
+[Unit]
+Description=Renew LetsEncrypt certificates weekly
+
+[Timer]
+OnCalendar=weekly
+RandomizedDelaySec=3600
+
+[Install]
+WantedBy=timers.target

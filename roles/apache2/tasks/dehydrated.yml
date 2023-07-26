@@ -1,0 +1,66 @@
+# See main.yml. This is only executed when 'acme_domains' is not empty
+---
+- name: dehydrated (ACME) => Ensure packages are installed
+  apt:
+    name:
+      - dehydrated
+      - dehydrated-apache2
+    state: present
+    install_recommends: false
+
+- name: dehydrated (ACME) => Set domains.txt
+  copy:
+    content: "{{ acme_domains | join('\n') }}\n"
+    dest: /etc/dehydrated/domains.txt
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: dehydrated (ACME) => Set CONTACT_EMAIL in configuration
+  when: acme_contact_email | length > 0
+  copy:
+    content: "CONTACT_EMAIL=\"{{ acme_contact_email }}\"\n"
+    dest: /etc/dehydrated/conf.d/contact_email
+    owner: root
+    group: root
+    mode: "0644"
+
+# This is only a simple heuristic for determining account existence
+- name: dehydrated (ACME) => Check if registered account exists
+  find:
+    paths: /var/lib/dehydrated/accounts
+    recurse: true
+  register: accounts_found
+
+- name: dehydrated (ACME) => Register account if necessary
+  when: accounts_found.matched == 0
+  shell: dehydrated --register --accept-terms
+
+# Again, only a simple heuristic
+- name: dehydrated (ACME) => Check if certificates exist
+  find:
+    paths: /var/lib/dehydrated/certs
+    recurse: true
+  register: certs_found
+
+- name: dehydrated (ACME) => Get certificates if necessary
+  when: certs_found.matched == 0
+  shell: dehydrated --cron
+
+- name: dehydrated (ACME) => Set up systemd service and timer
+  copy:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/{{ item }}
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - dehydrated.service
+    - dehydrated.timer
+
+- name: dehydrated (ACME) => Enable systemd timer
+  systemd:
+    name: dehydrated.timer
+    state: started
+    enabled: true
+    daemon_reload: true

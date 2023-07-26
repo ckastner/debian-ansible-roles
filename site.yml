@@ -1,0 +1,20 @@
+---
+# Main playbook driving the entire configuration
+
+- name: Common configuration
+  hosts: all
+  roles:
+    - role: common
+      tags: common
+
+- name: Apache webserver configuration
+  hosts: apache2
+  roles:
+    - role: apache2
+      tags: apache2
+
+- name: reprepro configuration
+  hosts: reprepro
+  roles:
+    - role: reprepro
+      tags: reprepro
