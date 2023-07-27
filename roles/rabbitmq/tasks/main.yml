@@ -1,0 +1,5 @@
+---
+- name: RabbitMQ configuration
+  import_tasks: rabbitmq.yml
+  tags:
+    - rabbitmq

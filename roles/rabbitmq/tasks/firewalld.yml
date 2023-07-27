@@ -1,0 +1,11 @@
+---
+- name: RabbitMQ => Open up AMQP ports on endpoints
+  firewalld:
+    zone: "{{ rabbitmq_firewalld_zone | default(omit, true) }}"
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+  loop:
+    - amqp
+    - amqps
+  notify: Restart firewalld

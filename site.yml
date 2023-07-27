@@ -32,3 +32,9 @@
   roles:
     - role: reprepro
       tags: reprepro
+
+- name: RabbitMQ configuration
+  hosts: rabbitmq
+  roles:
+    - role: rabbitmq
+      tags: rabbitmq

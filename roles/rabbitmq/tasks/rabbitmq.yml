@@ -1,0 +1,30 @@
+---
+- name: RabbitMQ => Ensure packages are installed
+  apt:
+    name:
+      - rabbitmq-server
+    state: present
+    install_recommends: false
+
+- name: RabbitMQ => Copy configuration
+  template:
+    src: rabbitmq/rabbitmq.conf.j2
+    dest: /etc/rabbitmq/rabbitmq.conf
+    owner: root
+    group: rabbitmq
+    mode: "0640"
+  notify: Restart rabbitmq-server
+
+- name: RabbitMQ => Copy SSL files
+  when: rabbitmq_ssl
+  copy:
+    src: files/HOSTS/{{ inventory_hostname }}/rabbitmq/{{ item.name }}
+    dest: /etc/rabbitmq/{{ item.name }}
+    owner: root
+    group: rabbitmq
+    mode: "{{ item.mode }}"
+  loop:
+    - {name: ca.crt, mode: "0644"}
+    - {name: server.crt, mode: "0644"}
+    - {name: server.key, mode: "0640"}
+  notify: Restart rabbitmq-server

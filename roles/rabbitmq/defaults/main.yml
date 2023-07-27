@@ -1,0 +1,4 @@
+rabbitmq_tcp: true
+rabbitmq_ssl: false
+rabbitmq_createusers: []
+rabbitmq_firewalld_zone: ""
