@@ -1,0 +1,32 @@
+# See main.yml. This is only executed when 'wireguard_endpoint' is set
+---
+- name: firewalld => Ensure that all necessary variables are set
+  assert:
+    quiet: true
+    that:
+      - wireguard_listenport | int > 0
+
+- name: firewalld => Open up port on public endpoints
+  firewalld:
+    zone: "{{ wireguard_endpoint_firewalld_zone | default(omit, true) }}"
+    port: "{{ wireguard_listenport }}/udp"
+    permanent: true
+    state: enabled
+  notify: Restart firewalld
+
+- name: firewalld => Create custom firewalld_zone
+  when: wireguard_interface_firewalld_zone | length > 0
+  firewalld:
+    zone: "{{ wireguard_interface_firewalld_zone }}"
+    permanent: true
+    state: present
+  notify: Restart firewalld
+
+- name: firewalld => Add WireGuard interface to custom firewalld zone
+  when: wireguard_interface_firewalld_zone | length > 0
+  firewalld:
+    zone: "{{ wireguard_interface_firewalld_zone }}"
+    interface: "{{ wireguard_interface_name }}"
+    permanent: true
+    state: enabled
+  notify: Restart firewalld

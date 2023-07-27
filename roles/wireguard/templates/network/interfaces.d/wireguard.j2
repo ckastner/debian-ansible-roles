@@ -1,0 +1,6 @@
+auto {{ wireguard_interface_name }}
+iface {{ wireguard_interface_name }} inet static
+    address {{ wireguard_address }}
+    pre-up ip link add $IFACE type wireguard
+    pre-up wg setconf $IFACE /etc/wireguard/$IFACE.conf
+    post-down ip link del $IFACE

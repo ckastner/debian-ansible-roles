@@ -1,0 +1,15 @@
+wireguard_privatekey: "CHANEGME"
+wireguard_publickey: "CHANGEME"
+wireguard_address: "CHANGEME"
+wireguard_listenport:
+wireguard_persistent_keepalive:
+wireguard_endpoint: ""
+wireguard_endpoint_firewalld_zone: ""
+wireguard_interface_name: "ansible-wg0"
+wireguard_interface_firewalld_zone: ""
+
+wireguard_peers: []
+# name: xxx
+# allowed_ips: xxx
+# publickey: xxx
+# endpoint: xxx

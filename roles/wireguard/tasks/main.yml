@@ -1,0 +1,12 @@
+---
+- name: WireGuard configuration
+  import_tasks: wireguard.yml
+  tags:
+    - wireguard
+
+- name: WireGuard firewalld configuration
+  when: wireguard_endpoint | length > 0
+  import_tasks: firewalld.yml
+  tags:
+    - wireguard
+    - firewalld

@@ -7,6 +7,14 @@
     - role: common
       tags: common
 
+- name: WireGuard configuration
+  hosts: wireguard
+  roles:
+    - role: wireguard
+      tags:
+        - wireguard
+        - network
+
 - name: Apache webserver configuration
   hosts: apache2
   roles:

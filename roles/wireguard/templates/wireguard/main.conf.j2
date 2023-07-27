@@ -1,0 +1,27 @@
+[Interface]
+PrivateKey = {{ wireguard_privatekey }}
+{% if wireguard_listenport -%}
+ListenPort = {{ wireguard_listenport }}
+{% endif %}
+{% for peer in wireguard_peers %}
+
+[Peer]
+{% if peer.publickey is defined %}
+PublicKey = {{ peer.publickey }}
+{% else %}
+PublicKey = {{ hostvars[peer.name].wireguard_publickey }}
+{% endif %}
+{% if peer.allowed_ips is defined %}
+AllowedIPs = {{ peer.allowed_ips }}
+{% else %}
+AllowedIPs = {{ hostvars[peer.name].wireguard_address | ipaddr('address') + '/32' }}
+{% endif %}
+{% if peer.endpoint is defined -%}
+Endpoint = {{ peer.endpoint }}
+{% elif hostvars[peer.name].wireguard_endpoint is defined %}
+Endpoint = {{ hostvars[peer.name].wireguard_endpoint }}:{{ hostvars[peer.name].wireguard_listenport }}
+{% endif -%}
+{% if wireguard_persistent_keepalive | int > 0  %}
+PersistentKeepalive = {{ wireguard_persistent_keepalive | int }}
+{% endif %}
+{% endfor %}

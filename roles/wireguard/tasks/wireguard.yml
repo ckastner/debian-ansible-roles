@@ -1,0 +1,36 @@
+---
+- name: WireGuard => Ensure that all necessary variables are set
+  assert:
+    quiet: true
+    that:
+      - wireguard_privatekey != "CHANGEME"
+      - wireguard_publickey != "CHANGEME"
+      - wireguard_address != "CHANGEME"
+
+- name: WireGuard => Ensure packages are installed
+  apt:
+    name: wireguard-tools
+    state: present
+
+- name: WireGuard => Kernel module is loaded
+  modprobe:
+    name: wireguard
+    state: present
+
+- name: WireGuard => Set WireGuard configuration
+  template:
+    src: wireguard/main.conf.j2
+    dest : /etc/wireguard/{{ wireguard_interface_name }}.conf
+    owner: root
+    group: root
+    mode: 0600
+  notify: Restart WireGuard interface
+
+- name: WireGuard => Set network interface configuration
+  template:
+    src: network/interfaces.d/wireguard.j2
+    dest: /etc/network/interfaces.d/{{ wireguard_interface_name }}
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart WireGuard interface

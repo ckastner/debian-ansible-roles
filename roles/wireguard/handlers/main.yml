@@ -1,0 +1,3 @@
+---
+- name: Restart WireGuard interface
+  shell: ifdown --ignore-errors {{ wireguard_interface_name }} && ifup {{ wireguard_interface_name }}
