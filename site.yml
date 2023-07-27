@@ -13,6 +13,12 @@
     - role: apache2
       tags: apache2
 
+- name: approx configuration
+  hosts: approx
+  roles:
+    - role: approx
+      tags: approx
+
 - name: reprepro configuration
   hosts: reprepro
   roles:

@@ -1,0 +1,8 @@
+---
+approx_pdiffs: true
+approx_interval: 60
+approx_mappings:
+  - name: debian
+    uri: https://deb.debian.org/debian
+  - name: debian-security
+    uri: https://security.debian.org/debian-security

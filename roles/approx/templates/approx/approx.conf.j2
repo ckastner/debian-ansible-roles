@@ -1,0 +1,33 @@
+# Here are some examples of remote repository mappings.
+# See http://www.debian.org/mirror/list for mirror sites.
+
+#debian		http://ftp.debian.org/debian
+#security	http://security.debian.org/debian-security
+
+# The following are the default parameter values, so there is
+# no need to uncomment them unless you want a different value.
+# See approx.conf(5) for details.
+
+#$cache		/var/cache/approx
+#$interval	60
+{% if approx_interval != 60 %}
+$interval	{{ approx_interval }}
+{% endif %}
+#$max_rate	unlimited
+#$max_redirects 5
+#$user		approx
+#$group		approx
+#$syslog	daemon
+#$pdiffs	true
+{% if not approx_pdiffs %}
+$pdiffs		false
+{% endif %}
+#$offline	false
+#$max_wait	10
+#$curl_path	/usr/bin/curl
+#$verbose	false
+#$debug		false
+
+{% for entry in approx_mappings %}
+{{ "%-15s" % entry.name }} {{ entry.uri }}
+{% endfor %}

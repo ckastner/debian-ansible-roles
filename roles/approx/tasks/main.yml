@@ -1,0 +1,6 @@
+---
+- name: approx configuration
+  import_tasks: approx.yml
+  tags:
+    - approx
+    - apt
