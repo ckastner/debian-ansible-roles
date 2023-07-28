@@ -1,0 +1,52 @@
+# We force HTTPS
+<VirtualHost *:80>
+  ServerName {{ debci_servername }}
+{% if debci_servername in acme_domains %}
+  Redirect / https://{{ debci_servername }}
+{% endif %}
+  DocumentRoot /usr/share/debci/public
+
+  ErrorLog ${APACHE_LOG_DIR}/debci.error.log
+  CustomLog ${APACHE_LOG_DIR}/debci.access.log combined
+</VirtualHost>
+
+{% if debci_servername in acme_domains %}
+<VirtualHost *:443>
+  ServerName {{ debci_servername }}
+  DocumentRoot /usr/share/debci/public
+
+  SSLEngine on
+  SSLCertificateFile  /var/lib/dehydrated/certs/{{ debci_servername }}/fullchain.pem
+  SSLCertificateKeyFile /var/lib/dehydrated/certs/{{ debci_servername }}/privkey.pem
+  SSLCipherSuite ECDHE-RSA-AES256-SHA384:AES256-SHA256:!RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
+
+  PassengerEnabled on
+  PassengerAppRoot /usr/share/debci
+  PassengerAppType rack
+  PassengerUser debci
+  PassengerGroup debci
+  PassengerAppGroupName debci
+
+  ErrorLog ${APACHE_LOG_DIR}/debci.error.log
+  CustomLog ${APACHE_LOG_DIR}/debci.access.log combined
+  #Alias /noindex.html /etc/debci/noindex.html
+  #<Location /noindex.html>
+  #  Require all granted
+  #</Location>
+  #<Directory /usr/share/debci/public>
+  #  Options FollowSymLinks
+  #  AllowOverride None
+  #  Require all granted
+  #  DirectoryIndex index.html /noindex.html
+  #</Directory>
+  <IfModule mod_headers.c>
+    <FilesMatch "log$">
+      Header set Content-Type "text/plain; charset=utf-8"
+    </FilesMatch>
+    <FilesMatch "log\.gz$">
+      Header append Content-Encoding gzip
+      Header set Content-Type "text/plain; charset=utf-8"
+    </FilesMatch>
+  </IfModule>
+</VirtualHost>
+{% endif %}

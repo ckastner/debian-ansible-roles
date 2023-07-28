@@ -1,0 +1,32 @@
+---
+- name: debci-master WebUI => Ensure packages are installed
+  apt:
+    name: libapache2-mod-passenger
+    state: present
+    install_recommends: false
+
+- name: debci-master WebUI => Enable required apache2 modules
+  command: a2enmod {{ item }}
+  args:
+    creates: /etc/apache2/mods-enabled/{{ item }}.load
+  loop:
+    - cgid
+    - headers
+    - passenger
+    - rewrite
+    - ssl
+  notify: Restart Apache webserver
+
+- name: debci-master WebUI => Copy apache2 site configuration
+  template:
+    src: apache2/sites-available/debci.conf.j2
+    dest: /etc/apache2/sites-available/debci.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: debci-master WebUI => Enable apache2 site
+  command: a2ensite debci
+  args:
+    creates: /etc/apache2/sites-enabled/debci.conf
+  notify: Restart Apache webserver

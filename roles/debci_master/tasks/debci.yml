@@ -1,0 +1,40 @@
+---
+- name: debci-master => Ensure that all necessary variables are set
+  assert:
+    quiet: true
+    that:
+      - debci_servername != "CHANGEME"
+
+- name: debci-master => Ensure packages are installed
+  apt:
+    name:
+      - debci-collector
+    state: present
+    install_recommends: false
+
+- name: debci-master => Copy configuration
+  template:
+    src: debci/debci.conf.j2
+    dest: /etc/debci/debci.conf
+    owner: root
+    group: debci
+    mode: "0640"
+  notify:
+    - Restart Apache webserver
+    - Restart debci-collector
+
+- name: debci-master => Copy SSL files
+  when: debci_amqp_ssl
+  copy:
+    src: files/HOSTS/{{ inventory_hostname }}/debci/{{ item.name }}
+    dest: /etc/debci/{{ item.name }}
+    owner: root
+    group: debci
+    mode: "{{ item.mode }}"
+  loop:
+    - {name: ca.crt, mode: "0644"}
+    - {name: client.crt, mode: "0644"}
+    - {name: client.key, mode: "0640"}
+  notify:
+    - Restart Apache webserver
+    - Restart debci-collector

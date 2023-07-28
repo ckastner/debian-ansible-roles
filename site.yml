@@ -38,3 +38,11 @@
   roles:
     - role: rabbitmq
       tags: rabbitmq
+
+- name: debci-master configuration
+  hosts: debci_master
+  roles:
+    - role: debci_master
+      tags:
+        - debci
+        - debci_master

@@ -1,0 +1,15 @@
+---
+- name: debci-master configuration
+  import_tasks: debci.yml
+  tags:
+    - debci
+    - debci_master
+
+- name: debci-master WebUI configuration
+  import_tasks: apache2.yml
+  tags:
+    - debci
+    - debci_master
+    - apache
+    - apache2
+    - www

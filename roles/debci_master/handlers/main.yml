@@ -1,0 +1,5 @@
+---
+- name: Restart debci-collector
+  service:
+    name: debci-collector
+    state: restarted

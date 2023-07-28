@@ -1,0 +1,6 @@
+---
+dependencies:
+  - global_handlers
+  - common
+  - apache2
+  - rabbitmq
