@@ -1,0 +1,50 @@
+---
+- name: debci-worker = > Ensure that all necessary variables are set
+  assert:
+    quiet: true
+    that:
+      - debci_arch != "CHANGEME"
+      - debci_backend != "CHANGEME"
+
+- name: debci-worker => Ensure main packages are installed
+  apt:
+    name: debci-worker
+    state: present
+    install_recommends: false
+
+- name: debci-worker => Ensure QEMU backend packages are installed
+  when: debci_backend == "qemu" or debci_backend == "qemu+rocm"
+  apt:
+    name:
+      - ovmf
+      - qemu-system-x86
+      - qemu-utils
+      - vmdb2
+      - qemu-user-static
+      - dosfstools
+    state: present
+    install_recommends: false
+
+- name: debci-worker => Copy configuration
+  template:
+    src: debci/debci.conf.j2
+    dest: /etc/debci/debci.conf
+    owner: root
+    group: debci
+    mode: "0640"
+  notify: Restart debci-worker
+
+- name: debci-master => Copy SSL files
+  when: debci_amqp_ssl
+  copy:
+    src: files/HOSTS/{{ inventory_hostname }}/debci/{{ item.name }}
+    dest: /etc/debci/{{ item.name }}
+    owner: root
+    group: debci
+    mode: "{{ item.mode }}"
+  loop:
+    - {name: ca.crt, mode: "0644"}
+    - {name: client.crt, mode: "0644"}
+    - {name: client.key, mode: "0640"}
+  notify:
+    - Restart debci-worker

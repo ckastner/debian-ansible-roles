@@ -1,0 +1,6 @@
+---
+- name: debci-worker configuration
+  import_tasks: debci.yml
+  tags:
+    - debci
+    - debci_worker

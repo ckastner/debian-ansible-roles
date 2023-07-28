@@ -46,3 +46,11 @@
       tags:
         - debci
         - debci_master
+
+- name: debci-worker configuration
+  hosts: debci_worker
+  roles:
+    - role: debci_worker
+      tags:
+        - debci
+        - debci_worker

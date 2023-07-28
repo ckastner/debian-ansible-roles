@@ -1,0 +1,5 @@
+---
+debci_amqp_server: ""
+debci_amqp_ssl: false
+debci_arch: "CHANGEME"
+debci_backend: "CHANGEME"
