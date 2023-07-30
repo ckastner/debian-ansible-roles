@@ -1,0 +1,102 @@
+#!/bin/bash
+# Helper for generating CA, server, and client certificates
+#
+# Christian Kastner <ckk@kvr.at>
+# License: MIT
+set -eu
+
+function usage() {
+	cat >&2 <<- EOF
+
+	This is a minimal helper for creating and managing CA, server, and client
+	certificates using OpenSSL.
+
+	This expects an 'openssl.cnf' file in the current directory.
+
+	Synopsis:
+	  $0 -h
+
+	  $0 ca
+	
+	  $0 server commonName
+
+	  $0 client commonName
+
+	Options:
+	  -h    Show this help
+
+	Examples:
+
+	  # Generate a CA certificate
+	  \$ $0 ca
+
+	  # Generate a server certificate for service.example.com
+	  \$ $0 server service.example.com
+
+	  # Generate a client certificate for worker.example.com
+	  \$ $0 client worker.example.com
+
+	EOF
+	exit 0
+}
+
+# Basic setup
+command="${1:-}"
+fqdn="${2:-}"
+if [ -z "$command" ] || [ "$command" = "-h" ]
+then
+	usage
+elif [ "$command" != "ca" ] && [ "$command" != "server" ] && [ "$command" != "client" ]
+then
+	usage
+else
+	[ -d "private" ] || mkdir --mode="0700" private
+	[ -d "reqs" ] || mkdir reqs
+	[ -d "certs" ] || mkdir certs
+	[ -f "serial" ] || echo 01 > serial
+	[ -f "index.txt" ] || touch index.txt
+fi
+
+# CA doesn't need further arguments
+if [ "$command" = "ca" ]
+then
+	if [ -f "certs/ca.crt.pem" ]
+	then
+		echo "CA certificate certs/ca.crt.pem already exists." >&2
+		exit 1
+	fi
+
+	openssl req -x509 -config openssl.cnf -outform PEM -nodes -out certs/ca.crt.pem
+	# Print out some metadata to confirm what we just did
+	openssl x509 -in certs/ca.crt.pem -noout -issuer -subject -dates
+	exit 0
+fi
+
+# Server/client need a FQDN
+[ -n "$fqdn" ] || usage
+keyfile="private/$fqdn.key.pem"
+reqfile="reqs/$fqdn.req.pem"
+crtfile="certs/$fqdn.crt.pem"
+[ -f "$keyfile" ] && echo "Key $keyfile already exists." >&2 && exit 1
+[ -f "$reqfile" ] && echo "Certificate request  $reqfile already exists." >&2 && exit 1
+[ -f "$crtfile" ] && echo "Certificate $crtfile already exists." >&2 && exit 1
+
+if [ "$command" = "server" ]
+then
+	openssl genrsa -out "$keyfile" 4096
+	openssl req -config openssl.cnf -new -outform PEM -nodes \
+		-key "$keyfile" -out "$reqfile" \
+		-subj "/CN=$fqdn/OU=CI master"
+	openssl ca -config openssl.cnf \
+		-in "$reqfile" -out "$crtfile" \
+		-extensions server_ca_extensions
+elif [ "$command" = "client" ]
+then
+	openssl genrsa -out "$keyfile" 4096
+	openssl req -config openssl.cnf -new -outform PEM -nodes \
+		-key "$keyfile" -out "$reqfile" \
+		-subj "/CN=$fqdn/OU=CI worker"
+	openssl ca -config openssl.cnf \
+		-in "$reqfile" -out "$crtfile" \
+		-extensions client_ca_extensions
+fi

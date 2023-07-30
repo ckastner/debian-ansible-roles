@@ -1,0 +1,52 @@
+[ ca ]
+default_ca              = CHANGEME_ca
+
+[ CHANGEME_ca ]
+dir                     = .
+certificate             = $dir/certs/ca.crt.pem
+private_key             = $dir/private/ca.key.pem
+database                = $dir/index.txt
+new_certs_dir           = $dir/certs
+serial                  = $dir/serial
+policy                  = CHANGEME_ca_policy
+
+default_crl_days        = 7
+default_days            = 365
+default_md              = sha256
+
+[ CHANGEME_ca_policy ]
+commonName              = supplied
+stateOrProvinceName     = optional
+countryName             = optional
+emailAddress            = optional
+organizationName        = optional
+organizationalUnitName  = optional
+domainComponent         = optional
+
+[ req ]
+default_bits            = 4096
+default_keyfile         = ./private/ca.key.pem
+default_md              = sha256
+prompt                  = no
+distinguished_name      = root_ca_distinguished_name
+x509_extensions         = root_ca_extensions
+
+[ root_ca_distinguished_name ]
+commonName              = CHANGEME
+emailAddress            = CHANGEME
+organizationName        = CHANGEME
+organizationalUnitName  = CHANGEME
+
+[ root_ca_extensions ]
+basicConstraints        = CA:true
+keyUsage                = keyCertSign, cRLSign
+
+[ client_ca_extensions ]
+basicConstraints        = CA:false
+keyUsage                = digitalSignature,keyEncipherment
+extendedKeyUsage        = clientAuth
+
+[ server_ca_extensions ]
+basicConstraints        = CA:false
+keyUsage                = digitalSignature,keyEncipherment
+extendedKeyUsage        = serverAuth
