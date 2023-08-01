@@ -86,7 +86,7 @@ then
 	openssl genrsa -out "$keyfile" 4096
 	openssl req -config openssl.cnf -new -outform PEM -nodes \
 		-key "$keyfile" -out "$reqfile" \
-		-subj "/CN=$fqdn/OU=CI master"
+		-subj "/CN=$fqdn"
 	openssl ca -config openssl.cnf \
 		-in "$reqfile" -out "$crtfile" \
 		-extensions server_ca_extensions
@@ -95,7 +95,7 @@ then
 	openssl genrsa -out "$keyfile" 4096
 	openssl req -config openssl.cnf -new -outform PEM -nodes \
 		-key "$keyfile" -out "$reqfile" \
-		-subj "/CN=$fqdn/OU=CI worker"
+		-subj "/CN=$fqdn"
 	openssl ca -config openssl.cnf \
 		-in "$reqfile" -out "$crtfile" \
 		-extensions client_ca_extensions
