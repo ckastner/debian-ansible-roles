@@ -7,9 +7,5 @@ debci_amqp_cacert=/etc/debci/ca.crt
 debci_amqp_cert=/etc/debci/client.crt
 debci_amqp_key=/etc/debci/client.key
 {% endif %}
-{% if debci_arch| length > 0 %}
 debci_arch="{{ debci_arch }}"
-{% endif %}
-{% if debci_backend | length > 0 %}
 debci_backend="{{ debci_backend }}"
-{% endif %}
