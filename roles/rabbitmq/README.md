@@ -9,8 +9,8 @@ This role depends on the `global-handlers` and the `common` roles.
 
 ### RabbitMQ
 
-This creates `/etc/rabbitmq/rabbitmq.conf`. There isn't much to this yet, other
-than to manage certificates for TLS connections.
+This creates `/etc/rabbitmq/rabbitmq.conf` and `/etc/rabbitmq/conf.d`. There
+isn't much to this yet, other than managing certificates for TLS connections.
 
 ### firewalld
 

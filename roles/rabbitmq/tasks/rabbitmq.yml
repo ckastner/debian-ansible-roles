@@ -6,6 +6,14 @@
     state: present
     install_recommends: false
 
+- name: RabbitMQ => Create configuration drop-in directory conf.d
+  file:
+    path: /etc/rabbitmq/conf.d
+    state: directory
+    owner: rabbitmq
+    group: rabbitmq
+    mode: "0755"
+
 - name: RabbitMQ => Copy configuration
   template:
     src: rabbitmq/rabbitmq.conf.j2
