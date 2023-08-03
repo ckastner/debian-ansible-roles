@@ -13,3 +13,4 @@ The following global handlers are currently defined:
 - Restart Apache webserver
 - Restart firewalld
 - Restart OpenSSH server
+- Restart RabbitMQ server

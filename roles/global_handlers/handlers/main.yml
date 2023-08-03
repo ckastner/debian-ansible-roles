@@ -16,3 +16,8 @@
     name: ssh
     state: restarted
     enabled: yes
+
+- name: Restart RabbitMQ server
+  service:
+    name: rabbitmq-server
+    state: restarted

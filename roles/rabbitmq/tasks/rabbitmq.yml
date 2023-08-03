@@ -21,7 +21,7 @@
     owner: root
     group: rabbitmq
     mode: "0640"
-  notify: Restart rabbitmq-server
+  notify: Restart RabbitMQ server
 
 - name: RabbitMQ => Copy SSL files
   when: rabbitmq_ssl
@@ -35,4 +35,4 @@
     - {name: ca.crt, mode: "0644"}
     - {name: server.crt, mode: "0644"}
     - {name: server.key, mode: "0640"}
-  notify: Restart rabbitmq-server
+  notify: Restart RabbitMQ server
