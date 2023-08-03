@@ -1,6 +1,7 @@
 ---
 debci_amqp_server: ""
 debci_amqp_ssl: false
-debci_arch: "CHANGEME"
-debci_backend: "CHANGEME"
 debci_mirror: https://deb.debian.org/debian
+debci_arch: ""
+debci_suite: ""
+debci_backend: ""

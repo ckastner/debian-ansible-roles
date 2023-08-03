@@ -1,11 +1,4 @@
 ---
-- name: debci-worker = > Ensure that all necessary variables are set
-  assert:
-    quiet: true
-    that:
-      - debci_arch != "CHANGEME"
-      - debci_backend != "CHANGEME"
-
 - name: debci-worker => Ensure main packages are installed
   apt:
     name: debci-worker

@@ -15,6 +15,7 @@ This role depends on the `global-handlers` and `common` roles.
 This installs all necessary packages, including those needed by the requested
 backend, and creates the configuration file `/etc/debci/debci.conf`.
 
+
 ## Variables
 
 ```yaml
@@ -31,9 +32,19 @@ debci_amqp_server: ""
 # /etc/debci/ on the target.
 debci_amqp_ssl: false
 
-# Package architecture this worker can test
-debci_arch: "CHANGEME"
 
-# Backend this worker uses to test packages
-debci_backend: "CHANGEME"
+### If the default values below are not changed, then they will be left unset
+### in /etc/debci/debci.conf, which means that debci will use its own defaults
+
+# Package architecture this worker can test.
+# debci default: host architecture (dpkg --print-architecture)
+debci_arch: ""
+
+# Suite to use as defaults for debci-{setup,worker,test}.
+# debci default: "unstable"
+debci_suite: ""
+
+# Backend this worker uses to test packages. Leave empty to use the default,
+# which is "lxc".
+debci_backend: ""
 ```
