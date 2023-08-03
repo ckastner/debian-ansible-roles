@@ -19,6 +19,12 @@ This installs all necessary packages and creates the configuration file
 
 This creates a `VirtualHost` over which the debci frontend can be accessed.
 
+### RabbitMQ
+
+This unconditionally increases `consumer_timeout`, the timeout for consumer
+acknowledgments, from the default of 30min to 12h, so that long-running jobs
+can finish normally.
+
 
 ## Variables
 

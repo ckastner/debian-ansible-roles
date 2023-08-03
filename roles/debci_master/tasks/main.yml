@@ -5,6 +5,13 @@
     - debci
     - debci_master
 
+- name: debci-master RabbitMQ configuration
+  import_tasks: rabbitmq.yml
+  tags:
+    - debci
+    - debci_master
+    - rabbitmq
+
 - name: debci-master WebUI configuration
   import_tasks: apache2.yml
   tags:

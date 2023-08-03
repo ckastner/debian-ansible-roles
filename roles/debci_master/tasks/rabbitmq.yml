@@ -1,0 +1,9 @@
+---
+- name: debci-master => Increase RabbitMQ consumer_timeout to 12h
+  copy:
+    src: rabbitmq/conf.d/consumer_timeout.conf
+    dest: /etc/rabbitmq/conf.d/consumer_timeout.conf
+    owner: rabbitmq
+    group: rabbitmq
+    mode: "0644"
+  notify: Restart RabbitMQ server
