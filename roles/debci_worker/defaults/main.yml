@@ -3,5 +3,8 @@ debci_amqp_server: ""
 debci_amqp_ssl: false
 debci_mirror: https://deb.debian.org/debian
 debci_arch: ""
+debci_arch_list: []
 debci_suite: ""
+debci_suite_list: []
 debci_backend: ""
+debci_backend_list: []

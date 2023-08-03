@@ -47,4 +47,39 @@ debci_suite: ""
 # Backend this worker uses to test packages. Leave empty to use the default,
 # which is "lxc".
 debci_backend: ""
+
+# List of all architectures/suites/backends this worker uses in tests. These
+# lists will be used by the cron job that periodically rebuilds the test
+# environments.
+# debci_default: A list with the single value from the variable above.
+debci_arch_list: []
+debci_suite_list: []
+debci_backend_list: []
+```
+
+
+## Examples
+
+```yaml
+# Passwords should be avoided until #1037322 and #1038139 get fixed
+debci_amqp_server: "amqps://user:pass@10.0.0.1"
+
+# Connect to RabbitMQ using a client certificate
+debci_amqp_ssl: true
+
+# This host can test the 'stable', 'testing', and 'unstable' suites using the
+# 'lxc' and 'qemu' backends.
+debci_suite_list: [stable, testing, unstable]
+debci_backend_list: [qemu, lxc]
+
+# Given the above, on an amd64 worker (where debci_arch defaults to 'amd64'),
+# the cron job would periodically rebuild the following test environments:
+# arch   suite     backend
+# ----   -----     -------
+# amd64  stable    qemu
+# amd64  testing   qemu
+# amd64  unstable  qemu
+# amd64  stable    lxc
+# amd64  testing   lxc
+# amd64  unstable  lxc
 ```
