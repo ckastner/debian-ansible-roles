@@ -31,6 +31,9 @@ can finish normally.
 ```yaml
 ### Values shown here are the defaults
 
+# Value for the apache2 'ServerName' directive
+debci_servername: "CHANGEME"
+
 # Connection string for the RabbitMQ server to connect to
 debci_amqp_server: ""
 
@@ -42,6 +45,39 @@ debci_amqp_server: ""
 # /etc/debci/ on the target.
 debci_amqp_ssl: false
 
-# Value for the apache2 'ServerName' directive
-debci_servername: "CHANGEME"
+# List of all architectures, suites, and backend that this CI environment
+# supports:
+debci_arch_list:
+  - amd64
+debci_suite_list:
+  - unstable
+debci_backend_list:
+  - lxc
+```
+
+
+## Examples
+
+```yaml
+# Passwords should be avoided until #1037322 and #1038139 get fixed
+debci_amqp_server: "amqps://user:pass@10.0.0.1"
+
+# Connect to RabbitMQ using a client certificate
+debci_amqp_ssl: true
+
+# This CI environment can cover the 'stable', 'testing', and 'unstable' suites
+# using the 'lxc' and 'qemu' backends.
+debci_suite_list: [stable, testing, unstable]
+debci_backend_list: [qemu, lxc]
+```
+
+Given the above configuration (and assuming worker nodes are set up properly),
+here are some examples for test submissions:
+
+```shell
+# Test libfoo in unstable on amd64 using the lxc backend
+$ debci enqueue -s unstable -b lxc libfoo
+
+# Test libbar in stable on amd64 using the qemu backend
+$ debci enqueue -s stable -b qemu libfoo
 ```
