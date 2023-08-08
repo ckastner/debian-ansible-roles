@@ -53,6 +53,9 @@ debci_suite_list:
   - unstable
 debci_backend_list:
   - lxc
+
+# List of extra files to copy from files/HOSTS/{{ inventory_hostname}}/debci to /etc/debci
+debci_conf_extra: []
 ```
 
 
@@ -69,6 +72,10 @@ debci_amqp_ssl: true
 # using the 'lxc' and 'qemu' backends.
 debci_suite_list: [stable, testing, unstable]
 debci_backend_list: [qemu, lxc]
+
+# Copy to /etc/debci/extra_apt_sources_list.yaml
+debci_conf_extra:
+  - extra_apt_sources_list.yaml
 ```
 
 Given the above configuration (and assuming worker nodes are set up properly),

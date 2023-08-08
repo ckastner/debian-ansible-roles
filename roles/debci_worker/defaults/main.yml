@@ -8,3 +8,4 @@ debci_suite: ""
 debci_suite_list: []
 debci_backend: ""
 debci_backend_list: []
+debci_conf_extra: []

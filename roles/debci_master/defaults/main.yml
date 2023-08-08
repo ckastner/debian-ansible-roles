@@ -7,3 +7,4 @@ debci_suite_list:
   - unstable
 debci_backend_list:
   - lxc
+debci_conf_extra: []

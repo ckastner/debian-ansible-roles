@@ -12,13 +12,26 @@
     state: present
     install_recommends: false
 
-- name: debci-master => Copy configuration
+- name: debci-master => Manage /etc/debci/debci.conf
   template:
     src: debci/debci.conf.j2
     dest: /etc/debci/debci.conf
     owner: root
     group: debci
     mode: "0640"
+  notify:
+    - Restart Apache webserver
+    - Restart debci-collector
+
+- name: debci-master => Copy supporting files to /etc/debci
+  copy:
+    src: "{{ item }}"
+    dest: /etc/debci/{{ item }}
+    owner: root
+    group: debci
+    mode: "0644"
+  loop:
+    "{{ debci_conf_extra }}"
   notify:
     - Restart Apache webserver
     - Restart debci-collector

@@ -55,6 +55,9 @@ debci_backend: ""
 debci_arch_list: []
 debci_suite_list: []
 debci_backend_list: []
+
+# List of extra files to copy from files/HOSTS/{{ inventory_hostname}}/debci to /etc/debci
+debci_conf_extra: []
 ```
 
 
@@ -82,4 +85,8 @@ debci_backend_list: [qemu, lxc]
 # amd64  stable    lxc
 # amd64  testing   lxc
 # amd64  unstable  lxc
+
+# Copy to /etc/debci/suite_bases.txt
+debci_conf_extra:
+  - suite_bases.txt
 ```
