@@ -1,0 +1,21 @@
+---
+- name: sysctl => Ensure packages are installed
+  when:
+    - etc_sysctl_d | length > 0
+  apt:
+    name: procps
+    state: present
+
+- name: sysctl => /etc/sysctl.d
+  when:
+    - etc_sysctl_d | length > 0
+  copy:
+    src: HOSTS/{{ inventory_hostname }}/sysctl.d/{{ item }}
+    dest: /etc/sysctl.d/{{ item }}
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ etc_sysctl_d }}"
+  notify:
+    - Update sysctl
+    - Update initramfs

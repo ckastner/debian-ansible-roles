@@ -17,6 +17,8 @@ sshd_password_auth: false
 etc_modules: []
 etc_modprobe_d: []
 
+etc_sysctl_d: []
+
 etc_sysfs_d: []
 
 etc_udev_rules_d: []

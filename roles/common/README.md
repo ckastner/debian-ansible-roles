@@ -118,6 +118,10 @@ etc_modprobe_d: []
 # The source files are expected in files/HOSTS/<inventory_hostname>/udev/rules.d
 etc_udev_rules_d: []
 
+# Host-specific files to add to /etc/sysctl.d
+# The source files are expected in files/HOSTS/<inventory_hostname>/sysctl.d
+etc_sysctl_d: []
+
 # Host-specific files to add to /etc/sysfs.d
 # The source files are expected in files/HOSTS/<inventory_hostname>/sysfs.d
 etc_sysfs_d: []
@@ -219,6 +223,14 @@ etc_udev_rules_d:
   - 99-plugdev.rules
 ```
 
+The following `host_vars` would ensure that
+`files/HOSTS/<inventory_hostname>/sysctl.d/ip_forward.conf` is copied to
+`/etc/sysctl.d/ip_forward.conf`:
+
+```yaml
+etc_sysctl_d:
+  - ip_forward.conf
+```
 The following `host_vars` would ensure that
 `files/HOSTS/<inventory_hostname>/syfs.d/lowpower.conf` is copied to
 `/etc/sysfs.d/lowpower.conf`:

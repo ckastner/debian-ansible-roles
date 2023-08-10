@@ -21,17 +21,26 @@
   tags:
     - ssh
 
+- name: sysctl configuration tasks
+  import_tasks: sysctl.yml
+  tags:
+    - sysctl
+    - kernel
+    - drivers
+
 - name: sysfs configuration tasks
   import_tasks: sysfsutils.yml
   tags:
     - sysfs
     - sysfsutils
+    - kernel
     - drivers
 
 - name: systemd configuration tasks
   import_tasks: systemd.yml
   tags:
     - systemd
+    - kernel
 
 - name: udev configuration tasks
   import_tasks: udev.yml

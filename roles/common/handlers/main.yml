@@ -5,3 +5,6 @@
 
 - name: Update initramfs
   command: /usr/sbin/update-initramfs -u
+
+- name: Update sysctl
+  command: /usr/sbin/sysctl --system
