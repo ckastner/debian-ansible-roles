@@ -29,7 +29,7 @@
 
 - name: debci-worker => Copy supporting files to /etc/debci
   copy:
-    src: "{{ item }}"
+    src: files/HOSTS/{{inventory_hostname}}/debci/{{ item }}
     dest: /etc/debci/{{ item }}
     owner: root
     group: debci
