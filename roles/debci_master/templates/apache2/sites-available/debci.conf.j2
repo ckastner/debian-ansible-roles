@@ -2,7 +2,7 @@
 <VirtualHost *:80>
   ServerName {{ debci_servername }}
 {% if debci_servername in acme_domains %}
-  Redirect / https://{{ debci_servername }}
+  Redirect / https://{{ debci_servername }}/
 {% endif %}
   DocumentRoot /usr/share/debci/public
 
