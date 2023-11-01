@@ -62,6 +62,9 @@ debci_conf_extra: []
 ## Examples
 
 ```yaml
+# Server name for the apache2 VirtualHost configuration (see the template)
+debci_servername: "ci.example.com"
+
 # Passwords should be avoided until #1037322 and #1038139 get fixed
 debci_amqp_server: "amqps://user:pass@10.0.0.1"
 
