@@ -1,10 +1,13 @@
 debci_servername: "CHANGEME"
 debci_amqp_server: ""
 debci_amqp_ssl: false
+debci_arch: ""
 debci_arch_list:
   - amd64
+debci_suite: ""
 debci_suite_list:
   - unstable
+debci_backend: ""
 debci_backend_list:
   - lxc
 debci_salsa_client_id: ""

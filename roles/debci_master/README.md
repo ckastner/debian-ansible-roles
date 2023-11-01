@@ -52,6 +52,11 @@ debci_amqp_server: ""
 # /etc/debci/ on the target.
 debci_amqp_ssl: false
 
+# Default architecture, suite, backend where needed (e.g. Self-Service)
+debci_arch: ""
+debci_suite: ""
+debci_backend: ""
+
 # List of all architectures, suites, and backend that this CI environment
 # supports:
 debci_arch_list:
@@ -87,6 +92,8 @@ debci_amqp_ssl: true
 # using the 'lxc' and 'qemu' backends.
 debci_suite_list: [stable, testing, unstable]
 debci_backend_list: [qemu, lxc]
+# Use the qemu backend by default
+debci_backend: "qemu"
 
 # Copy to /etc/debci/extra_apt_sources_list.yaml
 debci_conf_extra:
