@@ -15,6 +15,11 @@ roles.
 This installs all necessary packages and creates the configuration file
 `/etc/debci/debci.conf`.
 
+To enable the *Self-Service* feature with [Salsa](https://salsa.debian.org)
+authentication, one must enable GitLab OAuth2 authentication by creating an
+Application token in Salsa following these
+[instructions](https://docs.gitlab.com/ee/integration/oauth_provider.html).
+
 ### apache2
 
 This creates a `VirtualHost` over which the debci frontend can be accessed.
@@ -55,6 +60,10 @@ debci_suite_list:
   - unstable
 debci_backend_list:
   - lxc
+
+# If present, will enable Self-Service with salsa authentication
+debci_salsa_client_id: ""
+debci_salsa_client_secret: ""
 
 # List of extra files to copy from files/HOSTS/{{ inventory_hostname}}/debci to /etc/debci
 debci_conf_extra: []

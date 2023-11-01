@@ -7,4 +7,6 @@ debci_suite_list:
   - unstable
 debci_backend_list:
   - lxc
+debci_salsa_client_id: ""
+debci_salsa_client_secret: ""
 debci_conf_extra: []

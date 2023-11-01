@@ -36,6 +36,17 @@
     - Restart Apache webserver
     - Restart debci-collector
 
+- name: debci-master => Enable Salsa OAuth2 authentication
+  when: debci_salsa_client_id | length > 0 and debci_salsa_client_secret | length > 0
+  template:
+    src: debci/conf.d/salsa-auth.conf.j2
+    dest: /etc/debci/conf.d/salsa-auth.conf
+    owner: root
+    group: debci
+    mode: "0640"
+  notify:
+    - Restart Apache webserver
+
 - name: debci-master => Copy SSL files
   when: debci_amqp_ssl
   copy:
