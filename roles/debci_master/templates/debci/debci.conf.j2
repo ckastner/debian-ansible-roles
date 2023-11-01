@@ -1,3 +1,8 @@
+{% if debci_servername in acme_domains %}
+debci_url_base="https://{{ debci_servername }}"
+{% else %}
+debci_url_base="http://{{ debci_servername }}"
+{% endif %}
 {% if debci_amqp_server | length > 0 -%}
 debci_amqp_server="{{ debci_amqp_server }}"
 {% endif %}

@@ -31,7 +31,9 @@ can finish normally.
 ```yaml
 ### Values shown here are the defaults
 
-# Value for the apache2 'ServerName' directive
+# Value for the apache2 'ServerName' directive as well as debci_url_base.
+# If acme_domains is also set (see roles/apache2/README.md), then
+# debci_url_base will use https, otherwise http.
 debci_servername: "CHANGEME"
 
 # Connection string for the RabbitMQ server to connect to
@@ -64,6 +66,7 @@ debci_conf_extra: []
 ```yaml
 # Server name for the apache2 VirtualHost configuration (see the template)
 debci_servername: "ci.example.com"
+# The above will also set debci_url_base="https://ci.example.com" (resp. http)
 
 # Passwords should be avoided until #1037322 and #1038139 get fixed
 debci_amqp_server: "amqps://user:pass@10.0.0.1"
