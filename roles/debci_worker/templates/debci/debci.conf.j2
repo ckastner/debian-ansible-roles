@@ -26,3 +26,6 @@ debci_backend="{{ debci_backend }}"
 {% if debci_backend_list %}
 debci_backend_list="{{ debci_backend_list | join(' ') }}"
 {% endif %}
+{% if debci_autopkgtest_args | length > 0 %}
+debci_autopkgtest_args="{{ debci_autopkgtest_args }}"
+{% endif %}

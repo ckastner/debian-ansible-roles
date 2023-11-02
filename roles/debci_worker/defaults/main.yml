@@ -8,4 +8,5 @@ debci_suite: ""
 debci_suite_list: []
 debci_backend: ""
 debci_backend_list: []
+debci_autopkgtest_args: ""
 debci_conf_extra: []

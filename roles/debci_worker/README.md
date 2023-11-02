@@ -56,6 +56,9 @@ debci_arch_list: []
 debci_suite_list: []
 debci_backend_list: []
 
+# Passed on through to the autopkgtest runner (not the virtualization provider)
+debci_autopkgtest_args: ""
+
 # List of extra files to copy from files/HOSTS/{{ inventory_hostname}}/debci to /etc/debci
 debci_conf_extra: []
 ```
@@ -85,6 +88,9 @@ debci_backend_list: [qemu, lxc]
 # amd64  stable    lxc
 # amd64  testing   lxc
 # amd64  unstable  lxc
+
+# Increase the test run timeout to 3h (default is 1h)
+debci_autopkgtest_args="--timeout-test 10800"
 
 # Copy to /etc/debci/suite_bases.txt
 debci_conf_extra:
