@@ -10,12 +10,12 @@
     state: directory
     owner: approx
     group: approx
-    mode: 0755
+    mode: "0755"
 
-- name: approx => Configure /etc/approx.conf
+- name: approx => Configure /etc/approx/approx.conf
   template:
     src: approx/approx.conf.j2
     dest: /etc/approx/approx.conf
     owner: root
     group: root
-    mode: "0755"
+    mode: "0644"
