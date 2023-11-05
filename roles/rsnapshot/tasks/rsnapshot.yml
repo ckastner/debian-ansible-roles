@@ -1,0 +1,64 @@
+---
+- name: rsnapshot => Package is installed
+  apt:
+    name: rsnapshot
+    state: present
+    install_recommends: false
+
+- name: rsnapshot => Backup directory exists
+  file:
+    path: "{{ rsnapshot_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: rsnapshot => Configure /etc/rsnapshot.conf
+  template:
+    src: rsnapshot.conf.j2
+    dest: /etc/rsnapshot.conf
+    owner: root
+    group: root
+    mode: "0660"
+
+- name: rsnapshot => Validate systemd calendar specs
+  shell: systemd-analyze calendar "{{ item }}"
+  changed_when: false
+  loop: "{{ rsnapshot_retain | map(attribute='oncalendar') }}"
+
+- name: rsnapshot => Find obsolete services and timers
+  vars:
+    keep_levels: "{{ rsnapshot_retain | map(attribute='level') | join('|') }}"
+  find:
+    paths: /etc/systemd/system
+    patterns: "rsnapshot\\.\\w+\\.(service|timer)"
+    excludes: "rsnapshot\\.({{ keep_levels }})\\.(service|timer)"
+    use_regex: true
+  register: rsnapshot_systemd
+
+- name: rsnapshot => Remove obsolete services and timers
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ rsnapshot_systemd.files | map(attribute='path') }}"
+
+- name: rsnapshot => Create systemd services and timers
+  vars:
+    level: "{{ item[0].level }}"
+    oncalendar: "{{ item[0].oncalendar }}"
+    unit: "{{ item[1] }}"
+  template:
+    src: "systemd/system/rsnapshot.{{ unit }}.j2"
+    dest: "/etc/systemd/system/rsnapshot.{{ level }}.{{ unit }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ rsnapshot_retain | product(['service', 'timer']) | list }}"
+
+- name: rsnapshot => Enable systemd timers
+  systemd:
+    name: rsnapshot.{{ item }}.timer
+    state: started
+    enabled: true
+    daemon_reload: true
+  loop: "{{ rsnapshot_retain | map(attribute='level') }}"

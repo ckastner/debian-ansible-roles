@@ -1,0 +1,8 @@
+[Unit]
+Description=rsnapshot backup
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/rsnapshot {{ level }}

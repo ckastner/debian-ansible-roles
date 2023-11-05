@@ -1,0 +1,8 @@
+[Unit]
+Description=rsnapshot timer level {{ level }}
+
+[Timer]
+OnCalendar={{ oncalendar }}
+
+[Install]
+WantedBy=timers.target

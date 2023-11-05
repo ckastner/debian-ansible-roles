@@ -39,6 +39,12 @@
     - role: rabbitmq
       tags: rabbitmq
 
+- name: rsnapshot configuration
+  hosts: rsnapshot
+  roles:
+    - role: rsnapshot
+      tags: rsnapshot
+
 - name: debci-master configuration
   hosts: debci_master
   roles:

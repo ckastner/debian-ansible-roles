@@ -1,0 +1,5 @@
+---
+rsnapshot_root: "/var/cache/rsnapshot"
+rsnapshot_retain: []
+rsnapshot_backup: []
+rsnapshot_excludes: []

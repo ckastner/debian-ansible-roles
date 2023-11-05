@@ -1,0 +1,6 @@
+---
+- name: rsnapshot configuration
+  import_tasks: rsnapshot.yml
+  tags:
+    - rsnapshot
+    - backup
