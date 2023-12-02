@@ -3,3 +3,8 @@
   import_tasks: rabbitmq.yml
   tags:
     - rabbitmq
+
+- name: firewalld configuration
+  import_tasks: firewalld.yml
+  tags:
+    - firewalld
